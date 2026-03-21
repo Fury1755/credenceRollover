@@ -37,6 +37,8 @@ WARNINGS
 
 My memory usage increases by 3-7 MB everytime I run the macro. Don't worry, it will reset after you close all Excel tabs.
 
+Does not rollover everything. Exchange rate, tax comp and AJE is not touched, some CBS/CPL styles are also not rolled over automatically
+
 HOW TO UPDATE
 
 The macro is currently programmed to run for FY2024 to FY2025. If you are rolling over for FY2025-FY2026, just 
