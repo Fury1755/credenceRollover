@@ -10,7 +10,7 @@ To activate Personal Macro Workbook:
 Open excel -> right click on top ribbon -> select customize ribbon -> click developer
 select developer on top -> select record macro -> select Store Macro in "Personal Macro Workbook"
 
-now download the .bas and .cls files from here. Click on "<Code>" and download the autoRollover as zip.
+now download the .bas and .cls files from here. Click on "Code" and download the autoRollover as zip.
 Unzip and extract to a folder; should have a few files with .bas and .cls in there.
 Open Excel - > Developer -> Macro -> Visual Basic
 Look at top left area, You should see a project ending in "(PERSONAL.XLSB)" (that's your personal macro workbook). If you don't, press Ctrl + R to 
