@@ -1,5 +1,5 @@
 # credenceRollover
-code for rolling over financial statements in credence advisory
+code for rolling over financial statements in credence advisory for December FY2024-FY2025 (see below if you are rolling over future years)
 
 INSTALLATION
 
@@ -22,7 +22,8 @@ select and import the extracted files (one by one? I don't know, but there aren'
 
 You should see them under your PERSONAL.XLSB
 
-Installation complete!
+optional but recommended: Go to Visual Basic -> Tools -> Options -> General -> Error Trapping -> break on all errors. This makes the macro fail on every error. This script does not handle errors very well
+and may cause undefined behaviour if an error occurs (from changing random parts of the file to crashing excel).
 
 USAGE
 
@@ -32,6 +33,8 @@ In Excel -> Developer -> Macros -> InitializeRolloverWorkbooks -> File explorer 
 -> File explorer popup again -> select the new copy
 
 If it doesn't work the first time (it probably won't), run it again
+
+If an error occurs then I guess u gotta do it manually, mb. you can always try to debug it yourself if you have a ton of errors (mb again).
 
 WARNINGS
 
