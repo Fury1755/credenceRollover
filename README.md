@@ -34,6 +34,8 @@ In Excel -> Developer -> Macros -> InitializeRolloverWorkbooks -> File explorer 
 
 If it doesn't work the first time (it probably won't), run it again
 
+If an error occurs then I guess u gotta do it manually, mb. you can always try to debug it yourself if you have a ton of errors (mb again).
+
 WARNINGS
 
 My memory usage increases by 3-7 MB everytime I run the macro. Don't worry, it will reset after you close all Excel tabs.
