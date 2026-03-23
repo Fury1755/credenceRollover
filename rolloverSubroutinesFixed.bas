@@ -453,3 +453,18 @@ Public Function isFS(twinObj As ClsSheetTwin) As Boolean
     
     isFS = False
 End Function
+
+Sub FormatAsAccountingCustom(targetRange As Range)
+    Dim cell As Range
+    Dim v As Variant
+
+    For Each cell In targetRange
+        v = cell.Value
+        If v = 2023 Or v = 2024 Or v = 2025 Or v = 2026 Or _
+           v = "2023" Or v = "2024" Or v = "2025" Or v = "2026" Then
+            cell.NumberFormat = "@"
+        Else
+            cell.NumberFormat = "_(* #,##0_);_(* (#,##0);_(* ""-""??_);_(@_)"
+        End If
+    Next cell
+End Sub
