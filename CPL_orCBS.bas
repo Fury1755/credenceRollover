@@ -10,7 +10,7 @@ Public Sub CPLorCBSIdentifier(twinObj As ClsSheetTwin)
             isIdentified = True
     End Select
     
-    If isFS(twinObj) = False Then
+    If isFS(twinObj) = False Or isIdentified = True Then ' note: sometimes CBS and CPL can have no gridlines.
         'is not a FS thing
         Dim dataArr As Variant
         Dim formulaArr As Variant

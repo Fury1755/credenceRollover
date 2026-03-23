@@ -39,6 +39,7 @@ Attribute InitializeRolloverWorkbooks.VB_ProcData.VB_Invoke_Func = "I\n14"
                 Call SOCE_Identifier(twinObj) ' also self contained
                 Call CPLorCBSIdentifier(twinObj)
                 Call cashFlowIdentifier(twinObj)
+                DoEvents
                 
             
             If Err.Number <> 0 Then
