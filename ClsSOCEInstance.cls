@@ -25,11 +25,12 @@ Public Function processValues(Parent As ClsSOCETable)
     Dim isCurrentAndPreviousSame As Boolean
     Dim i As Long
     Dim targetPrevYearValues As Range
-    If currentYearValues.Rows.Count = prevYearValues.Rows.Count And currentYearValues.Columns.Count = prevYearValues.Columns.Count Then
+    If Parent.currentYearValues.Rows.Count = Parent.prevYearValues.Rows.Count And Parent.currentYearValues.Columns.Count = Parent.prevYearValues.Columns.Count Then
         isCurrentAndPreviousSame = True
     Else
         isCurrentAndPreviousSame = False
-        MsgBox "SOCE: current and previous years do not have the same number of rows. Cannot run. Location: " & currentYearValues.Worksheet.Name & " , " & currentYearValues.Address & " not matched to " & prevYearValues.Address
+        MsgBox "SOCE: current and previous years do not have the same number of rows. Cannot run. Location: " & Parent.currentYearValues.Worksheet.Name & " , " & Parent.currentYearValues.Address & " not matched to " & Parent.prevYearValues.Address
+        Exit Function
     End If
     
     If isCurrentAndPreviousSame = True Then
