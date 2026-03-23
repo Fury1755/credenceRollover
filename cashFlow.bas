@@ -9,6 +9,8 @@ Sub cashFlowIdentifier(twinObj As ClsSheetTwin)
     Application.ScreenUpdating = False
     'make sure it is not FS
     If isFS(twinObj) = True Then Exit Sub
+    'make sure it is not CSOCE (because my CF identifies SOCE sometimes)
+    If IsValidSOCE(twinObj) Then Exit Sub
     ' now make sure it is CF
     If isCF(twinObj) = True Then
 
@@ -65,9 +67,11 @@ Sub cashFlowIdentifier(twinObj As ClsSheetTwin)
             Next c
         End If
         
-        If currentStreak = recordStreak Then MsgBox "Error. Longest continuous range in '" & twinObj.source.Name & "' could not be found." & _
-        " (there are two ranges with identical length, so the range of cash flow values could not be identified. The program is going to write the values anyway so check the sheet carefully)"
-        
+        If currentStreak = recordStreak Then
+            MsgBox "Error. Longest continuous range in '" & twinObj.source.Name & "' could not be found." & _
+            " (there are two ranges with identical length, so the range of cash flow values could not be identified."
+            GoTo Cleanup
+        End If
         'so external links crash excel for some reason. we sanitize and get rid of it, replacing with value
         For r = 1 To UBound(dataArrFormula, 1)
             For c = 1 To UBound(dataArrFormula, 2)
