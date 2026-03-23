@@ -70,7 +70,8 @@ Public Sub MoveFormulasFromLeftToRightCustom(ByVal targetOffset As Long, _
             Else
                 If (InStr(1, fText, "SUM", vbTextCompare) > 0 Or _
                     InStr(1, fText, "+", vbTextCompare) > 0 Or _
-                    InStr(1, fText, "ROUND", vbTextCompare) > 0) Then
+                    InStr(1, fText, "ROUND", vbTextCompare) > 0) Or_ 
+                    Trim(fText) Like "=[a-zA-Z][1-9]" Then
                     
                     ' Logic Step C: The Value Integrity Check
                     srcVal = sCell.Value2
