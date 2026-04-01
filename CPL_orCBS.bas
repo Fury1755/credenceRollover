@@ -6,7 +6,8 @@ Public Sub CPLorCBSIdentifier(twinObj As ClsSheetTwin)
     
     Select Case UCase(Trim(source.Name))
         Case "CBS", "CPL", "FC_BS", "FC_P&L", "FMC_BS", "FMC_P&L", "FMC_BS 2024", "FMC_PL 2024", _
-        "FC_BS 2024", "FC_PL 2024", "SBS", "SPL", "PROFIT AND LOSS", "BALANCE SHEET", "BS", "P&L"
+        "FC_BS 2024", "FC_PL 2024", "SBS", "SPL", "PROFIT AND LOSS", "BALANCE SHEET", "BS", "P&L", _
+        "BS", "PL"
             isIdentified = True
     End Select
     
@@ -20,7 +21,7 @@ Public Sub CPLorCBSIdentifier(twinObj As ClsSheetTwin)
         Set searchRange = Application.Intersect(source.Range("A1", "Z300"), source.usedRange)
         If Not searchRange Is Nothing Then dataArr = searchRange.Value
         If Not searchRange Is Nothing Then formulaArr = searchRange.Formula
-        If searchRange Is Nothing Then GoTo Cleanup
+        If searchRange Is Nothing Then GoTo CleanUp
         ' dataArr is loaded into RAM
         If IsArray(dataArr) Then
             For r = 1 To UBound(dataArr, 1)
@@ -42,7 +43,7 @@ Public Sub CPLorCBSIdentifier(twinObj As ClsSheetTwin)
             For r = 1 To UBound(dataArr, 1)
                 For c = 1 To UBound(dataArr, 2)
                     Set targetRange = twinObj.target.Range(searchRange.Address).Cells(r, c)
-                    Set SourceRange = twinObj.source.Range(searchRange.Address).Cells(r, c)
+                    Set sourceRange = twinObj.source.Range(searchRange.Address).Cells(r, c)
                     If Left(CStr(formulaArr(r, c)), 1) <> "=" And UCase(Trim(dataArr(r, c))) = "2024" Then
                         dataArr(r, c) = "2025"
                         targetRange.Value = dataArr(r, c)
@@ -69,7 +70,7 @@ Public Sub CPLorCBSIdentifier(twinObj As ClsSheetTwin)
         End If
     End If
     
-Cleanup:
+CleanUp:
     Set searchRange = Nothing
     targetStr = ""
     Set targetRange = Nothing

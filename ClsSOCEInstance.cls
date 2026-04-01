@@ -13,15 +13,16 @@ Private currentYearValues As Range
 Private prevYearValues As Range
 Private pParent As ClsSOCETable ' we access this during cleanup
 
+
 Public Function Init(Parent As ClsSOCETable, currYear As Range, prevYear As Range)
-    If Not Parent Is Nothing Then Set Me.rowStubs = Parent.rowStubs
+    If Not Parent.rowStubs Is Nothing Then Set Me.rowStubs = Parent.rowStubs
     Set Me.tableHeaders = Parent.tableHeaders
     Set currentYearValues = currYear
     Set prevYearValues = prevYear
     Set pParent = Parent
 End Function
 
-Public Function processValues(Parent As ClsSOCETable)
+Public Function processValues(Parent As ClsSOCETable) ' processes normal SOCE
     Dim isCurrentAndPreviousSame As Boolean
     Dim i As Long
     Dim targetPrevYearValues As Range
@@ -30,7 +31,6 @@ Public Function processValues(Parent As ClsSOCETable)
     Else
         isCurrentAndPreviousSame = False
         MsgBox "SOCE: current and previous years do not have the same number of rows. Cannot run. Location: " & Parent.currentYearValues.Worksheet.Name & " , " & Parent.currentYearValues.Address & " not matched to " & Parent.prevYearValues.Address
-        Exit Function
     End If
     
     If isCurrentAndPreviousSame = True Then
@@ -56,6 +56,10 @@ Public Function processValues(Parent As ClsSOCETable)
     targetRowStub.Value2 = rowStubData
 
 End Function
+
+
+
+
 
 Private Sub Class_Terminate()
     Set rowStubs = Nothing

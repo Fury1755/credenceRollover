@@ -26,7 +26,7 @@ Attribute InitializeRolloverWorkbooks.VB_ProcData.VB_Invoke_Func = "I\n14"
 
     If twinList.Count = 0 Then
         MsgBox "No matching sheets found!", vbExclamation
-        GoTo Cleanup
+        GoTo CleanUp
     End If
 
     For i = 1 To twinList.Count
@@ -53,7 +53,7 @@ Attribute InitializeRolloverWorkbooks.VB_ProcData.VB_Invoke_Func = "I\n14"
         Next i
     
     Call ForceFullRecalc
-Cleanup:
+CleanUp:
     Debug.Print "Cleaning up memory..."
     
     On Error Resume Next
@@ -74,7 +74,7 @@ ErrorHandler:
     Debug.Print "Error " & Err.Number & ": " & Err.Description
     Application.Calculation = xlCalculationAutomatic
     Application.EnableEvents = True
-    Resume Cleanup
+    Resume CleanUp
 End Sub
 Private Sub ToggleWaitMode(ByVal bWait As Boolean)
     With Application
