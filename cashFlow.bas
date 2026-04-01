@@ -41,7 +41,7 @@ Sub cashFlowIdentifier(twinObj As ClsSheetTwin)
             For c = 1 To UBound(dataArrFormula, 2)
                 If InStr(1, dataArrFormula(r, c), "=") Or IsNumeric(CStr(dataArrFormula(r, c))) Then
                 ' streak only counts formulas or strictly numeric values
-                    If r < UBound(dataArrFormula, 1) Then
+                    If r < UBound(dataArrFormula, 1) - 1 Then
                         If InStr(1, dataArrFormula(r + 1, c), "=") > 0 Or IsNumeric(CStr(dataArrFormula(r + 1, c))) Then
                             If InStr(1, dataArrFormula(r + 2, c), "=") > 0 Or IsNumeric(CStr(dataArrFormula(r + 2, c))) Then
                                 currentStreak = currentStreak + 1
@@ -70,7 +70,7 @@ Sub cashFlowIdentifier(twinObj As ClsSheetTwin)
         If currentStreak = recordStreak Then
             MsgBox "Error. Longest continuous range in '" & twinObj.source.Name & "' could not be found." & _
             " (there are two ranges with identical length, so the range of cash flow values could not be identified."
-            GoTo Cleanup
+            GoTo CleanUp
         End If
         'so external links crash excel for some reason. we sanitize and get rid of it, replacing with value
         For r = 1 To UBound(dataArrFormula, 1)
@@ -78,23 +78,19 @@ Sub cashFlowIdentifier(twinObj As ClsSheetTwin)
                 If InStr(1, dataArrFormula(r, c), "[") > 0 Then
                     dataArrFormula(r, c) = dataArrValue(r, c)
                 End If
-                
-                If InStr(1, dataArrFormula(r, c), "31 December 2024", vbTextCompare) > 0 Then
-                    dataArrFormula(r, c) = Replace(dataArrFormula(r, c), "31 December 2024", "31 December 2025")
-                End If
-                ' shun bian update dates
             Next c
         Next r
         
         ' now we dump everything back
         target.Range(searchRange.Address).Formula = dataArrFormula
+        
                     
                             
     
     End If
                 
             
-Cleanup:
+CleanUp:
 Set priorYearRow = Nothing
 Set currentYearRow = Nothing
 strI = ""
@@ -111,7 +107,7 @@ End Sub
 
 Public Function IsCPLorCBS(twinObj As ClsSheetTwin) As Boolean
     ' Returns True if the sheet is identified as a BS or PL variant
-    On Error GoTo Cleanup
+    On Error GoTo CleanUp
     
     Dim source As Worksheet
     Set source = twinObj.source
@@ -149,13 +145,13 @@ Public Function IsCPLorCBS(twinObj As ClsSheetTwin) As Boolean
                 ' Threshold met
                 If occurrenceCount > 4 Then
                     IsCPLorCBS = True
-                    GoTo Cleanup
+                    GoTo CleanUp
                 End If
             Next r
         End If
     End If
 
-Cleanup:
+CleanUp:
     ' Wipe the RAM and kill the pointers
     If IsArray(dataArr) Then Erase dataArr
     Set searchRange = Nothing
@@ -169,7 +165,7 @@ Public Function isCF(twinObj As ClsSheetTwin) As Boolean
     If twinObj.source.usedRange.Cells.Count = 1 And IsEmpty(source.usedRange.Cells(1, 1)) Then
     ' guard against empty sheet
         isCF = False
-        GoTo Cleanup
+        GoTo CleanUp
     End If
     Dim searchRange As Range
     Dim target As Worksheet
@@ -194,7 +190,7 @@ Public Function isCF(twinObj As ClsSheetTwin) As Boolean
             If InStr(1, dataArrFormulas(r, c), "Prior year bal", vbTextCompare) > 0 Then
                 If InStr(1, dataArrFormulas(r + 1, c), "Current year bal", vbTextCompare) > 0 Then
                     isCF = True
-                    GoTo Cleanup
+                    GoTo CleanUp
                 End If
             End If
             
@@ -210,7 +206,7 @@ Public Function isCF(twinObj As ClsSheetTwin) As Boolean
             
             If matchCount > 3 Then
                 isCF = True
-                GoTo Cleanup
+                GoTo CleanUp
             End If
             
             For Each i In currencies
@@ -221,21 +217,21 @@ Public Function isCF(twinObj As ClsSheetTwin) As Boolean
             
             If currencyMatch > 4 Then
                 isCF = True
-                GoTo Cleanup
+                GoTo CleanUp
             End If
             
             If InStr(1, CStr(dataArrFormulas(r, c)), "Cash flows from operating activities", vbTextCompare) > 0 Or _
             InStr(1, CStr(dataArrFormulas(r, c)), "Cash flow from operating activities", vbTextCompare) > 0 Then
                 If isFS(twinObj) Then
                     isCF = True
-                    GoTo Cleanup
+                    GoTo CleanUp
                 End If
             End If
                 
         Next c
     Next r
     
-Cleanup:
+CleanUp:
     Set searchRange = Nothing
     Set source = Nothing
     Set target = Nothing
