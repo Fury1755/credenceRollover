@@ -30,7 +30,7 @@ Attribute InitializeRolloverWorkbooks.VB_ProcData.VB_Invoke_Func = "I\n14"
     End If
 
     For i = 1 To twinList.Count
-    Debug.Print "Index: " & i & " | Sheet: " & twinList(i).target.Name
+    Debug.Print "Index: " & i & " | Sheet: " & twinList(i).target.name
             ' Debug.Print "MASTER: Entering Iteration " & i & ": " & twinList(i).source.Name
             
             Set twinObj = twinList(i)
@@ -43,7 +43,7 @@ Attribute InitializeRolloverWorkbooks.VB_ProcData.VB_Invoke_Func = "I\n14"
                 
             
             If Err.Number <> 0 Then
-                Debug.Print "MASTER: Error caught in loop " & twinList(i).source.Name & ": " & Err.Description
+                Debug.Print "MASTER: Error caught in loop " & twinList(i).source.name & ": " & Err.Description
                 Err.Clear
             Else
                 ' Debug.Print "MASTER: Returned from Worker " & twinList(i).source.Name & " with no errors."
@@ -52,7 +52,7 @@ Attribute InitializeRolloverWorkbooks.VB_ProcData.VB_Invoke_Func = "I\n14"
             DoEvents
         Next i
     
-    Call ForceFullRecalc
+    Call ForceFullRecalc(1)
 CleanUp:
     Debug.Print "Cleaning up memory..."
     

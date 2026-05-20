@@ -1,7 +1,6 @@
-# credenceRollover
-code for rolling over financial statements in credence advisory for December FY2024-FY2025 (see below if you are rolling over future years)
+# INSTRUCTIONS
 
-INSTALLATION
+## INSTALLATION
 
 First you need to activate your "Personal Macro Workbook", which lets you save and use the macro for any Excel workbook. Otherwise you have to keep
 installing the code for every Excel file you open.
@@ -25,27 +24,27 @@ You should see them under your PERSONAL.XLSB
 optional but recommended: Go to Visual Basic -> Tools -> Options -> General -> Error Trapping -> break on all errors. This makes the macro fail on every error. This script does not handle errors very well
 and may cause undefined behaviour if an error occurs (from changing random parts of the file to crashing excel).
 
-USAGE
+## USAGE
 
 create a new copy of previous year working
 
 In Excel -> Developer -> Macros -> InitializeRolloverWorkbooks -> File explorer popup -> select the previous year working
 -> File explorer popup again -> select the new copy
 
-If it doesn't work the first time (it probably won't), run it again
+Repeat the step above. You have to run it twice for the script to run
 
-If an error occurs then I guess u gotta do it manually, mb. you can always try to debug it yourself if you have a ton of errors (mb again).
+If an error occurs, you have to roll over manually
 
-WARNINGS
+## WARNINGS
 
-My memory usage increases by 3-7 MB everytime I run the macro. Don't worry, it will reset after you close all Excel tabs.
+My memory usage temporarily increases by 3-7 MB every time I run this
 
-Does not rollover everything. Exchange rate, tax comp and AJE is not touched, some CBS/CPL styles are also not rolled over automatically
+Does not rollover everything. Exchange rate, tax comp and AJE is not touched, some CBS/CPL styles are not cleared automatically
 
-HOW TO UPDATE
+## HOW TO UPDATE
 
 The macro is currently programmed to run for FY2024 to FY2025. If you are rolling over for FY2025-FY2026, just 
 Excel -> Developer -> Macros -> select InitializeRolloverWorkbooks -> Edit Macro -> Ctrl + F -> Replace -> select "Current Project"
 
- then just do your find and replace from highest year to lowest year. Don't replace 2024 with 2025, then replace 2025 with 2026 (your original "2024" is now "2026")
+ then just do your find and replace from highest year to lowest year. Don't replace 2024 with 2025, then replace 2025 with 2026 (that would mean your original "2024" is now "2026")
 

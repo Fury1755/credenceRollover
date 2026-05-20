@@ -48,7 +48,7 @@ Public Sub MoveFormulasFromLeftToRightCustom(ByVal targetOffset As Long, _
     Dim fText As String, fTextA1 As String, fTextR1C1 As String, isExternal As Boolean, isAbsolute As Boolean
     Dim srcVal As Variant, tgtVal As Variant
     
-    Debug.Print "--- START: " & src.Name & " -> " & tgt.Name & " ---"
+    Debug.Print "--- START: " & src.name & " -> " & tgt.name & " ---"
     Debug.Print "SourceCol: " & sourceCol.Address & " | Rows: " & sourceCol.Rows.Count
     
     For r = 1 To sourceCol.Rows.Count
@@ -118,7 +118,7 @@ Dim srcSheet As Worksheet, tgtSheet As Worksheet
         Set tgtSheet = Nothing
         
         For Each wsCheck In tgtWb.Worksheets
-            If UCase(Trim(wsCheck.Name)) = UCase(Trim(srcSheet.Name)) And InStr(1, wsCheck.Name, "2023") = 0 And InStr(1, wsCheck.Name, "2022") = 0 Then
+            If UCase(Trim(wsCheck.name)) = UCase(Trim(srcSheet.name)) And InStr(1, wsCheck.name, "2024") = 0 And InStr(1, wsCheck.name, "2023") = 0 Then
                 Set tgtSheet = wsCheck
                 Exit For
             End If
@@ -140,8 +140,8 @@ Sub shiftColumnsInTwin(source As Worksheet, target As Worksheet, twinObj As ClsS
     Application.Calculation = xlCalculationManual
     Application.EnableEvents = False
     
-    If InStr(1, source.Name, "2022", vbTextCompare) > 0 Or _
-       InStr(1, source.Name, "2023", vbTextCompare) > 0 Then GoTo CleanUp
+    If InStr(1, source.name, "2023", vbTextCompare) > 0 Or _
+       InStr(1, source.name, "2024", vbTextCompare) > 0 Then GoTo CleanUp
     
     If Not isFS(twinObj) Then GoTo CleanUp
     If IsValidSOCE(twinObj) Then GoTo CleanUp
@@ -158,7 +158,7 @@ Sub shiftColumnsInTwin(source As Worksheet, target As Worksheet, twinObj As ClsS
     For Each cell In searchRange
     isPeriod = False
         If Not IsError(cell.Value) Then
-            If CStr(cell.Value) = "2024" Then
+            If CStr(cell.Value) = "2025" Then
                 If checkLeftForNote(cell) = True Then
                     ProcessHeaderShift source, target, cell, target.Range(cell.Address), twinObj
                 End If
@@ -198,7 +198,7 @@ CleanUp:
     Exit Sub
 
 ErrorHandler:
-    Debug.Print "!!! Error in shiftColumnsInTwin (" & source.Name & "): " & Err.Description
+    Debug.Print "!!! Error in shiftColumnsInTwin (" & source.name & "): " & Err.Description
     Resume CleanUp
 End Sub
 
@@ -207,11 +207,11 @@ Private Sub ProcessHeaderShift(source As Worksheet, target As Worksheet, srcHead
     colOffset = 0
     
     If Not IsError(srcHeader.Offset(0, 1).Value) Then
-        If Trim(CStr(srcHeader.Offset(0, 1).Value)) Like "*2023*" Then colOffset = 1
+        If Trim(CStr(srcHeader.Offset(0, 1).Value)) Like "*2024*" Then colOffset = 1
     End If
     
     If colOffset = 0 And Not IsError(srcHeader.Offset(0, 2).Value) Then
-        If Trim(CStr(srcHeader.Offset(0, 2).Value)) Like "*2023*" Then colOffset = 2
+        If Trim(CStr(srcHeader.Offset(0, 2).Value)) Like "*2024*" Then colOffset = 2
     End If
     
     
@@ -250,14 +250,14 @@ Private Sub ProcessHeaderShift(source As Worksheet, target As Worksheet, srcHead
                 Call FormatAsAccountingCustom(newCol)
                 Call FormatAsAccountingCustom(twinObj.tgtColOld)
                 
-                tgtHeader.Value = 2025
+                tgtHeader.Value = 2026
                 'clear unusual headers, if any
                 If CStr(srcHeader.Offset(-1, 0)) Like "*to*" Then
                     tgtHeader.Offset(-1, 0).ClearContents
                     tgtHeader.Offset(-2, 0).ClearContents
                     tgtHeader.Offset(-1, colOffset).ClearContents
                     tgtHeader.Offset(-2, colOffset).ClearContents
-                    tgtHeader.Offset(0, colOffset).Value2 = "2024"
+                    tgtHeader.Offset(0, colOffset).Value2 = "2025"
                     tgtHeader.Offset(0, colOffset).NumberFormat = "General"
                     tgtHeader.NumberFormat = "General"
                 End If
@@ -322,7 +322,7 @@ Function getColumn(ceiling As Range) As Range
     Set getColumn = ws.Range(ceiling, floor)
 End Function
 
-Sub ForceFullRecalc()
+Sub ForceFullRecalc(dummy As Long)
     Application.Calculation = xlCalculationAutomatic
     Application.CalculateFullRebuild
     Application.Calculate
@@ -349,7 +349,7 @@ Public Function IsValidSOCE(ByRef twinObj As ClsSheetTwin) As Boolean
         IsValidSOCE = False
         Exit Function
     End If
-    If InStr(1, twinObj.source.Name, "SOCE") > 1 Then
+    If InStr(1, twinObj.source.name, "SOCE") > 1 Then
         IsValidSOCE = True
         Exit Function
     End If
@@ -359,7 +359,7 @@ Public Function IsValidSOCE(ByRef twinObj As ClsSheetTwin) As Boolean
     Dim leftCol As Long, matchCount As Long
     Set usedRange = Application.Intersect(twinObj.source.usedRange, twinObj.source.Range("A1:V300"))
     Dim identifierArray As Variant
-    identifierArray = Array("At 1 January 2023", "Total comprehensive income for the year", "At 31 December 2023 and 1 January 2024", "Total comprehensive loss for the year", "At 31 December 2024")
+    identifierArray = Array("At 1 January 2024", "Total comprehensive income for the year", "At 31 December 2024 and 1 January 2025", "Total comprehensive loss for the year", "At 31 December 2025")
     matchCount = 0
     For Each cell In usedRange
         For i = LBound(identifierArray) To UBound(identifierArray)
@@ -368,7 +368,7 @@ Public Function IsValidSOCE(ByRef twinObj As ClsSheetTwin) As Boolean
             If (leftCol = 0) Then
                 leftCol = cell.Column
             ElseIf (leftCol <> cell.Column) Then
-                MsgBox "Error in sheet '" & twinObj.source.Name & "'. '" & identifierArray(i) & "' is in column " & cell.Column & " instead of column " & leftCol & ". (This is a message for finding SOCE sheets) Program will skip that sheet."
+                MsgBox "Error in sheet '" & twinObj.source.name & "'. '" & identifierArray(i) & "' is in column " & cell.Column & " instead of column " & leftCol & ". (This is a message for finding SOCE sheets) Program will skip that sheet."
                 isSOCE = False
                 IsValidSOCE = isSOCE
                 Exit Function
@@ -387,7 +387,7 @@ Public Sub SOCE_Identifier(twinObj As ClsSheetTwin)
     If IsValidSOCE(twinObj) = False Then
         GoTo CleanUp
         ' Debug.Print "No SOCE found for " & twinObj.source.Name
-    ElseIf IsValidSOCE(twinObj) = True Then Debug.Print "FOUND SOCE for " & twinObj.source.Name
+    ElseIf IsValidSOCE(twinObj) = True Then Debug.Print "FOUND SOCE for " & twinObj.source.name
     End If
     
     'past this point it should be SOCE
@@ -417,7 +417,7 @@ Sub ClearNumbersAndFormatCustom(targetRange As Range)
     For Each cell In targetRange
         If cellHasHardValues(cell) = True Then
             Select Case cell.Value
-                Case 2023, 2024, 2025
+                Case 2024, 2025, 2026
                     ' Keep
                 Case Else
                     cell.ClearContents
@@ -436,15 +436,15 @@ Sub UpdateYearsInArray(ByRef dataArr As Variant)
         For c = LBound(dataArr, 2) To UBound(dataArr, 2) 'columns dimension
             If VarType(dataArr(r, c)) = vbString Then
                 val = CStr(dataArr(r, c))
-                Dim posYA As Long, pos2025 As Long
+                Dim posYA As Long, pos2026 As Long
                 posYA = InStr(1, val, "YA", vbTextCompare)
-                pos2025 = InStr(1, val, "2025", vbTextCompare)
-                If posYA > 0 And pos2025 > posYA Then
-                    val = Replace(val, "2025", "2026")
+                pos2026 = InStr(1, val, "2026", vbTextCompare)
+                If posYA > 0 And pos2026 > posYA Then
+                    val = Replace(val, "2026", "2027")
                 End If
+                If InStr(val, "2025") > 0 Then val = Replace(val, "2025", "2026")
                 If InStr(val, "2024") > 0 Then val = Replace(val, "2024", "2025")
                 If InStr(val, "2023") > 0 Then val = Replace(val, "2023", "2024")
-                If InStr(val, "2022") > 0 Then val = Replace(val, "2022", "2023")
                 'save data into the array
                 dataArr(r, c) = val
             End If
@@ -465,13 +465,13 @@ Public Function isFS(twinObj As ClsSheetTwin) As Boolean
     Set target = twinObj.target
     Set source = twinObj.source
     
-    If InStr(1, target.Name, "2022", vbTextCompare) > 0 Or _
-       InStr(1, target.Name, "2023", vbTextCompare) > 0 Then
+    If InStr(1, target.name, "2023", vbTextCompare) > 0 Or _
+       InStr(1, target.name, "2024", vbTextCompare) > 0 Then
         isFS = False
         Exit Function
     End If
     
-    gridlinesOff = Not target.Parent.Windows(1).SheetViews(target.Name).DisplayGridlines
+    gridlinesOff = Not target.Parent.Windows(1).SheetViews(target.name).DisplayGridlines
     
     If Not gridlinesOff Or IsValidSOCE(twinObj) Then
         isFS = False 'we take SOCE != FS
@@ -486,7 +486,7 @@ Public Function isFS(twinObj As ClsSheetTwin) As Boolean
 
     For Each cell In searchRange
         If Not IsError(cell.Value) Then
-            If InStr(1, CStr(cell.Value), "2024") > 0 Then
+            If InStr(1, CStr(cell.Value), "2025") > 0 Then
                 If checkLeftForNote(cell) Then
                     isFS = True
                     twinObj.isFinancialStatement = True
@@ -505,8 +505,8 @@ Sub FormatAsAccountingCustom(targetRange As Range)
 
     For Each cell In targetRange
         v = cell.Value
-        If v = 2023 Or v = 2024 Or v = 2025 Or v = 2026 Or _
-           v = "2023" Or v = "2024" Or v = "2025" Or v = "2026" Then
+        If v = 2024 Or v = 2025 Or v = 2026 Or v = 2027 Or _
+           v = "2024" Or v = "2025" Or v = "2026" Or v = "2027" Then
             cell.NumberFormat = "@"
         Else
             cell.NumberFormat = "_(* #,##0_);_(* (#,##0);_(* ""-""??_);_(@_)"
@@ -521,10 +521,10 @@ Sub updateYearsInSheet(twinObj As ClsSheetTwin)
     Set sourceRange = Application.Intersect(source.usedRange, source.Range("A1", "Z200"))
     Dim cell As Range
     For Each cell In sourceRange
-        If CStr(cell.Value) Like "*31 December 2024*" Then
+        If CStr(cell.Value) Like "*31 December 2025*" Then
             With twinObj.target.Cells(cell.Row, cell.Column)
                 .NumberFormat = "@" ' Sets format to "Text"
-                .Value = Replace(CStr(cell.Value), "31 December 2024", "31 December 2025")
+                .Value = Replace(CStr(cell.Value), "31 December 2025", "31 December 2026")
             End With
         End If
     Next cell
